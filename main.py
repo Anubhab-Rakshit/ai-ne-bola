@@ -7,9 +7,9 @@ import math
 import time
 
 # Paths to the Excel files
-train_data_path = os.path.join(os.getcwd(), r"predictioner1\backend\uploads\train_data.xlsx")
-test_points_path = os.path.join(os.getcwd(), r"predictioner1\backend\uploads\test_points.xlsx")
-output_file_path = os.path.join(os.getcwd(), r"predictioner1\backend\uploads\predicted_test_data.xlsx")
+train_data_path = os.path.join(os.getcwd(), "train_data.xlsx")
+test_points_path = os.path.join(os.getcwd(), "test_points.xlsx")
+output_file_path = os.path.join(os.getcwd(), "predicted_test_data.xlsx")
 
 # OpenWeatherMap API URL and your API key
 WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather"
