@@ -53,9 +53,15 @@ This directory includes:
 ---
 
 ### 📄 `test_points.csv`  
-This file contains the main data used for predictions with the help of APIs.  
+This file contains the data predicted using our model . It contains the test points along with paremeters number of death cases, CFR and total cases.  
 - Format: **CSV**  
 - Includes essential data points like longitude, latitude, and other parameters.
+
+---
+
+### 📄 `main.py`
+This file is the building block of our model , all our mathematical assumptions like temperature dependency , prediction of unreported regions are done here.
+So the whole prediction process has been done in this file.
 
 ---
 
@@ -95,12 +101,6 @@ Contributions are welcome! If you'd like to contribute:
 3. Commit your changes: `git commit -m "Description of changes"`.  
 4. Push to the branch: `git push origin feature-name`.  
 5. Open a pull request.
-
----
-
-## **License**
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
 ---
 
