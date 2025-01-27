@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ebola Prediction Tool</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+      html{
+        height: 105vh;
+      }
+      #mainTitle{
+        font-size: 4rem;
+        font-weight: bold;
+        background: linear-gradient(to right, #ff7e5f, #ffffff,#1ecd18); /* Gradient colors */
+        background-clip: text; /* This makes the gradient apply to the text */
+        color: transparent; /* Make the text color transparent so the gradient shows */
+    
+      }
+      #navTitle{
+        font-size: 2rem;
+        font-weight: bold;
+        background: linear-gradient(to right, #cb401a,#ffffff); /* Gradient colors */
+        background-clip: text; /* This makes the gradient apply to the text */
+        color: transparent; /* Make the text color transparent so the gradient shows */
+    
+      }
+      /* Custom Animations */
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      @keyframes bounce-in {
+        0% {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .animate-bounce-in {
+        animation: bounce-in 0.5s ease-out;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-gray-100 font-sans">
+    <nav
+      class="bg-gray-800 py-4 px-6 shadow-lg fixed top-0 w-full z-50 fade-in"
+    >
+      <div class="container mx-auto flex justify-between items-center">
+        <a
+          href="#"
+          class="text-3xl font-bold text-yellow-500 hover:text-yellow-400 transition-all duration-300" id="navTitle"
+        >
+          AI NE BOLA
+        </a>
+
+         <!-- Hamburger Icon for Mobile -->
+         <div class="lg:hidden">
+          <button id="hamburger" class="text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              class="w-8 h-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <ul class="hidden lg:flex space-x-6 text-lg font-semibold">
+          <li>
+            <a
+              href="#"
+              class="hover:text-indigo-400 text-gray-200 transition-all duration-300"
+            >
+              Home
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/example"
+              target="_blank"
+              class="hover:text-indigo-400 text-gray-200 transition-all duration-300"
+            >
+              Github Repo
+            </a>
+          </li>
+        </ul>
+
+      </div>
+    </nav>
+
+    <!-- Main Title -->
+    <header class="pt-24 text-center">
+      <h1 class="text-5xl font-bold  animate-bounce-in" id="mainTitle">
+        AI NE BOLA - Ebola Prediction
+      </h1>
+      <p class="text-lg mt-4 text-gray-300">
+        Your tool for predictive analysis and prevention tips.
+      </p>
+    </header>
+
+    <section class="max-w-3xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg fade-in">
+      <h2 class="text-2xl font-semibold mb-4">Predict for Random Coordinates</h2>
+      <form id="predictForm" class="space-y-4">
+        <div class="flex flex-col">
+          <label for="lat" class="text-lg">Latitude:</label>
+          <input
+            type="number"
+            id="lat"
+            name="lat"
+            step="0.0001"
+            required
+            class="p-2 rounded-lg bg-gray-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+          />
+        </div>
+        <div class="flex flex-col">
+          <label for="long" class="text-lg">Longitude:</label>
+          <input
+            type="number"
+            id="long"
+            name="long"
+            step="0.0001"
+            required
+            class="p-2 rounded-lg bg-gray-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+          />
+        </div>
+        <div>
+          <button
+            type="submit"
+            id="btnsub1"
+            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300"
+          >
+            Predict
+          </button>
+          <button
+            id="btnsub2"
+            style="display: none"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300"
+            onclick="window.location.reload()"
+          >
+            Predict again
+          </button>
+        </div>
+      </form>
+      <div
+        id="predictionResult"
+        class="mt-6 p-4 bg-gray-700 rounded-lg fade-in"
+      ></div>
+    </section>
+
+    <!-- Map Section -->
+    <section
+      id="mapSection"
+      class="max-w-3xl mx-auto mt-8 p-6 bg-gray-800 rounded-lg shadow-lg fade-in"
+      style="display: none"
+    >
+      <h2 class="text-2xl font-semibold mb-4">Location on Map</h2>
+      <div id="map" style="height: 400px; width: 100%" class="rounded-lg"></div>
+    </section>
+
+    <!-- Prevention Tips -->
+    <section class="max-w-3xl mx-auto mt-8 bg-gray-800 p-6 rounded-lg shadow-lg fade-in">
+      <h2 class="text-2xl font-semibold mb-4 text-center">
+        <span class="text-red-500">⚠</span> Ebola Prevention Tips
+      </h2>
+      <div class="flex justify-center">
+        <button
+          onclick="showPreventionModal()"
+          class="px-6 py-3 bg-yellow-500 text-gray-900 text-lg font-semibold rounded-lg hover:bg-yellow-600 hover:text-gray-100 transition-all duration-300"
+        >
+          Show Prevention Tip
+        </button>
+      </div>
+    </section>
+    
+    <!-- Modal for Prevention Tips -->
+    <div
+      id="preventionModal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center z-50 hidden"
+    >
+      <div
+        class="bg-gray-800 p-8 rounded-lg shadow-lg w-11/12 max-w-md animate-bounce-in"
+      >
+        <div class="flex justify-between items-center">
+          <h3 class="text-2xl font-bold text-yellow-400">
+            <span class="text-red-500">⚠</span> Prevention Tip
+          </h3>
+          <button
+            onclick="closePreventionModal()"
+            class="text-red-500 hover:text-red-600 text-2xl font-bold"
+          >
+            ✖
+          </button>
+        </div>
+        <p id="preventionTipText" class="mt-4 text-gray-100 text-lg"></p>
+        <div class="flex justify-end mt-6">
+          <button
+            onclick="closePreventionModal()"
+            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300"
+          >
+            Got it!
+          </button>
+        </div>
+      </div>
+    </div>
+    
+  
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+
+const hamburger = document.getElementById("hamburger");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      hamburger.addEventListener("click", function () {
+        mobileMenu.classList.toggle("hidden");
+      });
+
+      // Close mobile menu
+      function closeMobileMenu() {
+        mobileMenu.classList.add("hidden");
+      }
+
+      // Fetching prediction data and showing map
+      document
+        .getElementById("predictForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          document.getElementById("btnsub1").style.display = "none";
+          document.getElementById("btnsub2").style.display = "block";
+          const lat = document.getElementById("lat").value;
+          const long = document.getElementById("long").value;
+          document.getElementById("lat").disabled = true;
+          document.getElementById("long").disabled = true;
+          // Fetching the data from the server
+          const response = await fetch(`/predict?lat=${lat}&long=${long}`);
+          const data = await response.json();
+
+          // Display prediction result
+          const predictionResult = document.getElementById("predictionResult");
+          predictionResult.innerHTML = `
+          <p><strong>Predicted Deaths:</strong> ${data.Predicted_Deaths}</p>
+          <p><strong>Predicted Fatality Ratio:</strong> ${data.Predicted_Fatality_Ratio}</p>
+          <p><strong>Temperature:</strong> ${data.Temperature}</p>
+          <p><strong>Humidity:</strong> ${data.Humidity}</p>
+        `;
+
+          // Show the map
+          const mapSection = document.getElementById("mapSection");
+          mapSection.style.display = "block";
+
+          // Initialize the map
+          const map = L.map("map").setView([lat, long], 13);
+
+          // Add OpenStreetMap tiles to the map
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution:
+              '&copy; <a href="">Created by Op Coders</a>',
+          }).addTo(map);
+
+          // Determine the color of the marker based on predicted deaths
+          let markerColor = "green"; // Default to green
+          if (data.Predicted_Deaths > 100) {
+            markerColor = "red";
+          } else if (data.Predicted_Deaths > 50) {
+            markerColor = "orange";
+          } else if (data.Predicted_Deaths > 10) {
+            markerColor = "yellow";
+          }
+
+          // Create a translucent circle marker for the location
+          const marker = L.circle([lat, long], {
+            color: markerColor,
+            fillColor: markerColor,
+            fillOpacity: 0.5,
+            radius: 5000, // Radius of the circle
+          }).addTo(map);
+
+          // Add popup showing the deaths and fatality ratio
+          marker
+            .bindPopup(
+              `
+          <p><strong>Deaths:</strong> ${data.Predicted_Deaths}</p>
+          <p><strong>Fatality Ratio:</strong> ${data.Predicted_Fatality_Ratio}</p>
+        `
+            )
+            .openPopup();
+        });
+        const tips = [
+        "Avoid direct contact with infected individuals and their body fluids.",
+        "Wash hands frequently with soap and water.",
+        "Wear protective gear if caring for someone who is infected.",
+        "Do not handle or eat bushmeat (wild animals).",
+        "Avoid areas with known Ebola outbreaks.",
+        "Seek medical attention immediately if you experience symptoms.",
+        "Follow public health guidelines and updates from authorities.",
+      ];
+    
+      // Function to show the modal with a random prevention tip
+      function showPreventionModal() {
+        const randomTip = tips[Math.floor(Math.random() * tips.length)];
+        document.getElementById("preventionTipText").innerText = randomTip;
+        document.getElementById("preventionModal").classList.remove("hidden");
+        document.getElementById("map").style.zIndex="0";
+      }
+    
+      // Function to close the modal
+      function closePreventionModal() {
+        document.getElementById("preventionModal").classList.add("hidden");
+      }
+    </script>
+  </body>
+</html>
