@@ -21,11 +21,7 @@ matplotlib.rcParams["figure.figsize"] = (20,10)
 file_path = os.path.join(os.getcwd(), r"ebolahackathon\train_data.xlsx")
 
 df1 = pd.read_excel(file_path)
-print(df1.head())
 
-print(df1.shape)
-
-print(df1.columns)
 
 df1.columns = df1.columns.str.strip()
 
@@ -34,8 +30,6 @@ df1['Deaths'].unique()
 df1['Deaths'].value_counts()
 
 print(df1.isnull().sum())
-
-print(df1.shape)
 
 df3 = df1.dropna()
 
