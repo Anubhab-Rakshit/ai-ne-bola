@@ -52,7 +52,7 @@ This directory includes:
 
 ---
 
-### 📄 `test_points.csv`  
+### 📄 `predicted_test_data.csv`  
 This file contains the data predicted using our model . It contains the test points along with paremeters number of death cases, CFR and total cases.  
 - Format: **CSV**  
 - Includes essential data points like longitude, latitude, and other parameters.
