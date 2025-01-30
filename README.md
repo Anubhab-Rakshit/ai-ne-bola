@@ -51,11 +51,36 @@ This directory includes:
   - Sampled longitude and latitude for verifying predictions.
 
 ---
+## 🤖 AI NE BOLA - Ebola Chatbot  
+
+We have developed a **custom-trained chatbot** using the **Gemini API**, designed specifically to provide **accurate and reliable information about Ebola and its related topics**. This chatbot has been fine-tuned to ensure that it stays **focused solely on Ebola-related queries**, offering:  
+
+- ✅ **General Information** about Ebola (causes, symptoms, transmission, and prevention)  
+- ✅ **Predictive Analysis** based on available data  
+- ✅ **Guidelines from WHO & CDC** for Ebola prevention and control  
+- ✅ **Myths vs. Facts** to combat misinformation  
+
+This chatbot is integrated seamlessly into our platform, allowing users to interact and get **real-time answers** to their questions about Ebola.  
+
+
+### 🚀 How It Works  
+1. The chatbot processes user queries using **Gemini’s NLP model**, ensuring context-aware responses.  
+2. It retrieves and structures responses **based on our training data** and **verified health resources**.  
+3. It is **restricted to Ebola-related topics** to maintain accuracy and relevance.  
+
+---
 
 ### 📄 `predicted_test_data.csv`  
 This file contains the data predicted using our model . It contains the test points along with paremeters number of death cases, CFR and total cases.  
 - Format: **CSV**  
 - Includes essential data points like longitude, latitude, and other parameters.
+
+---
+
+### 📄 `train_data_predicted(1).csv`  
+This file contains the data predicted using our model when it is run on the training points provided.
+It shows the MSE , Absolute Error for showing prediction variations.
+- Format: **CSV**  
 
 ---
 
