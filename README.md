@@ -53,6 +53,14 @@ This directory includes:
   - Sampled longitude and latitude for verifying predictions.
 
 ---
+## 📂 `ai-ne-bola-chatbot`
+
+- **Chatbot logic and API integration**  
+- **Training data and knowledge base**  
+- **Required dependencies and setup files**  
+- **Web interface**
+
+---
 
 
 ### 📄 `predicted_test_data.csv`  
