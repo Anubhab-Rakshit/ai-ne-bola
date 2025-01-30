@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI-NE-BOLA Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+   
+  </head>
+  <body class="min-h-screen flex flex-col items-center bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800/70 backdrop-blur-md shadow w-full">
+      <div class="max-w-4xl mx-auto flex items-center justify-between p-4">
+        <h1 class="text-xl font-bold text-purple-300">AI-NE-BOLA</h1>
+        <a
+          href="https://ai-ne-bola.netlify.app/"
+          class="text-sm text-white bg-gradient-to-r from-purple-500 to-indigo-500 px-4 py-2 rounded-lg hover:from-indigo-500 hover:to-purple-500 transition duration-300"
+        >
+          Home
+        </a>
+      </div>
+    </nav>
+
+    <!-- Chat Container -->
+    <div
+      id="chat-container"
+      class="bg-gray-800/80 shadow-lg rounded-2xl p-6 mt-8 w-11/12 max-w-lg backdrop-blur-md"
+    >
+      <h1 class="text-3xl font-extrabold text-center mb-6 text-purple-300">
+        AI-NE-BOLA Chatbot
+      </h1>
+
+      <!-- Chat History -->
+      <div
+        id="chat-history"
+        class="overflow-y-auto h-80 bg-gray-900/80 rounded-lg p-4 mb-4 shadow-inner border border-purple-500"
+      ></div>
+
+      <!-- Loader -->
+      <div
+        id="loader-container"
+        class="hidden items-center justify-center mb-4"
+      >
+        <span class="text-sm text-gray-400 mr-2 animate-pulse">
+          AI-NE-BOLA is thinking...
+        </span>
+        <div
+          id="loader"
+          class="h-6 w-6 border-4 border-gray-500 border-t-purple-500 rounded-full animate-spin"
+        ></div>
+      </div>
+
+      <!-- Chat Form -->
+      <form id="chat-form" class="flex items-center space-x-2">
+        <input
+          type="text"
+          id="user-input"
+          placeholder="please ask about ebola virus"
+          class="flex-grow p-3 border border-gray-600 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+          required
+        />
+        <button
+          type="submit"
+          class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-6 py-3 rounded-lg hover:from-indigo-500 hover:to-purple-500 transform hover:scale-105 transition duration-300 shadow-lg"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+
+    <script>
+      const chatHistory = document.getElementById("chat-history");
+      const userInput = document.getElementById("user-input");
+      const form = document.getElementById("chat-form");
+      const loaderContainer = document.getElementById("loader-container");
+
+      async function sendMessage() {
+        const userMessage = userInput.value;
+        userInput.value = ""; // Clear the input field
+        loaderContainer.style.display = "flex"; // Show the loader and message
+
+        try {
+          // Add the user's message to the chat history
+          chatHistory.innerHTML += `<div class='bg-purple-500/50 text-white p-3 rounded-lg mb-2 text-right animate-slide-in'>${userMessage}</div>`;
+
+          const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userInput: userMessage }),
+          });
+
+          const data = await response.json();
+          const botMessage = data.response;
+
+          // Add the bot's message to the chat history
+          chatHistory.innerHTML += `<div class='bg-indigo-500/50 text-white p-3 rounded-lg mb-2 text-left animate-slide-in'>${botMessage}</div>`;
+
+          // Scroll to the bottom of the chat history
+          chatHistory.scrollTop = chatHistory.scrollHeight;
+        } catch (error) {
+          console.error("Error:", error);
+          chatHistory.innerHTML += `<div class='bg-red-500/50 text-white p-3 rounded-lg mb-2 text-left'>Sorry, something went wrong. Please try again later.</div>`;
+        } finally {
+          loaderContainer.style.display = "none"; // Hide the loader
+        }
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault(); // Prevent form submission
+        sendMessage();
+      });
+    </script>
+  </body>
+</html>
